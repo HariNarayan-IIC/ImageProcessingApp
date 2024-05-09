@@ -22,7 +22,8 @@
         <div id="container">
             <h1 style="padding: 40px;">Image processing</h1>
 
-            <form action="/upload" method="post" enctype="multipart/form-data">
+            <form action={% url "upload" %} method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div>
                     <input class="form-control" type="file" name="image" accept="image/*">
                     <select class="form-select" name="processing_method">
