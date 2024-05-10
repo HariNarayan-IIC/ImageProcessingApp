@@ -7,56 +7,15 @@
         </div>
         <div style="overflow-y: auto; height: calc(100% - 41px);">
             <ol class="list-group list-group-numbered">
-
+                {% for entry in history_entries%}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
+                        <div class="fw-bold">{{entry.operation}}</div>
+                        Attributes:
                     </div>
                     <span class="badge text-bg-primary rounded-pill">14</span>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
+                {% endfor %}
 
                 <!-- Add more list items here if needed -->
             </ol>
@@ -99,7 +58,7 @@
                     <option value="2">Pixel processing</option>
                     <option value="3">Filters</option>
                 </select>
-                <select id="Operation" class="form-select mb-2">
+                <select id="Operation" class="form-select mb-2" name="selected_process">
                     <option>Operation</option>
                 </select>
             </div>
