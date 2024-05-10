@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+<div class = "row" style= "margin: 0px auto 0px auto">
+    <div class="col card shadow window p-0" style="">
+        <div class="card-header">
+            History
+        </div>
+        <div style="overflow-y: auto; height: calc(100% - 41px);">
+            <ol class="list-group list-group-numbered">
+
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Content for list item
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+
+                <!-- Add more list items here if needed -->
+            </ol>
+        </div>
+    </div>
+    
+
+    <div class= "col-6 shadow card window">
+        <div class="card-header">
+            
+        </div>
+        <div class="row image-container">
+            <!-- Original Image -->
+            <div>
+            {% if original_image_base64 %}
+                <h5>Original Image</h5>
+                <img src="data:image/jpeg;base64,{{ original_image_base64 }}" class="img-fluid" alt="Original Image">
+            {% endif %}
+            </div>
+        
+            {% comment %} <!-- Processed Image -->
+            <div class="col-md-6">
+            {% if processed_image_base64 %}
+                <h2>Processed Image</h2>
+                <img src="data:image/jpeg;base64,{{ processed_image_base64 }}" class="img-fluid" alt="Processed Image">
+            {% endif %}
+            </div> {% endcomment %}
+        </div>
+
+    </div>
+
+    <div class="col shadow card p-0 window">
+        <div class="card-header">
+            Tools
+        </div>
+        <form class="d-flex flex-column" style="height: 100vh" action="{% url "apply" %}" method="get">
+            <div class="m-2">
+                <select id="Category" class="form-select mb-2">
+                    <option value="1">Category</option>
+                    <option value="2">Pixel processing</option>
+                    <option value="3">Filters</option>
+                </select>
+                <select id="Operation" class="form-select mb-2">
+                    <option>Operation</option>
+                </select>
+            </div>
+            <div class="card-header">
+                Attributes
+            </div>
+            <div class="card-body">
+                <!-- Card content goes here -->
+            </div>
+            <div class="card-footer d-flex justify-content-end">
+                <button class="btn btn-outline-success" type="submit">Apply</button>
+            </div>
+        </form>
+    </div>
+    
+</div>
+<script>
+    const mainDropdown = document.getElementById('Category');
+    const subDropdown = document.getElementById('Operation');
+
+    // Define options for sub dropdown based on the selection in the main dropdown
+    const optionsByMainDropdown = {
+      1: ["Operation"],
+      2: ["Grayscale", "Invert", "Threshold"],
+      3: ["Blur", "Sharpen", "Median"]
+    };
+
+    // Function to update options of sub dropdown based on the selected option in the main dropdown
+    function updateSubDropdown() {
+      const selectedMainOption = mainDropdown.value;
+      subDropdown.innerHTML = '';
+
+      optionsByMainDropdown[selectedMainOption].forEach(optionText => {
+        const option = document.createElement('option');
+        option.textContent = optionText;
+        option.value = optionText; // You can set the value as needed
+        subDropdown.appendChild(option);
+      });
+    }
+
+    // Initially populate sub dropdown based on the default selection in the main dropdown
+    updateSubDropdown();
+
+    // Event listener to update sub dropdown when main dropdown selection changes
+    mainDropdown.addEventListener('change', updateSubDropdown);
+  </script>
+{% endblock content %}
