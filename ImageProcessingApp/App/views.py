@@ -18,6 +18,7 @@ def upload(request):
     if request.method == 'POST':
         # Check if the form is valid
         if 'image' in request.FILES:
+            History.objects.all().delete()
             image = request.FILES['image']
 
             # Save the uploaded image to disk
