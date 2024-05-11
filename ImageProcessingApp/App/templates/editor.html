@@ -13,20 +13,29 @@
                         <div class="fw-bold">{{entry.operation}}</div>
                         Attributes:
                     </div>
-                    <i class="bi bi-pencil pe-2"></i>
-                    <i class="bi bi-trash3"></i>
+                    <a href ="{% url "update" entry.id%}" ><i class="bi bi-pencil pe-2"></i></a>
+                    <a href ="{% url "delete" entry.id%}" ><i class="bi bi-trash3"></i></a>
                 </li>
                 {% endfor %}
 
                 <!-- Add more list items here if needed -->
             </ol>
         </div>
+        <div class="card-footer d-flex justify-content-end bg-danger-subtle border-top border-dark">
+            <a class="btn btn-danger" href="{% url "reset" %}">Reset</a>
+        </div>
     </div>
-    
 
-    <div class= "col-6 shadow card window p-0 border border-dark">
-        <div class="card-header bg-danger-subtle border-bottom border-dark">
-            Original Image
+
+    <div class= "col-7 shadow card window p-0 border border-dark">
+        <div class="d-flex justify-content-between card-header bg-danger-subtle border-bottom border-dark">
+            <div>Original Image</div>
+            <div class="bg-danger-subtle">
+                Upload  
+                <a href="{% url "upload" %}">
+                    <i class="bi bi-upload btn btn-danger" style="font-size: 1rem; color: white"></i>
+                </a>
+            </div>
         </div>
         <div class="row image-container p-2">
             <!-- Original Image -->
@@ -48,6 +57,7 @@
 
     </div>
 
+
     <div class="col shadow card p-0 window border border-dark">
         <div class="card-header bg-danger-subtle border-bottom border-dark">
             Tools
@@ -55,12 +65,12 @@
         <form class="d-flex flex-column" style="height: 100vh" action="{% url "apply" %}" method="get">
             <div class="m-2">
                 <select id="Category" class="form-select mb-2 border border-dark">
-                    <option value="1">Category</option>
+                    <option value="1" style="color: #999">--Category--</option>
                     <option value="2">Pixel processing</option>
                     <option value="3">Filters</option>
                 </select>
                 <select id="Operation" class="form-select mb-2 border border-dark" name="selected_process">
-                    <option>Operation</option>
+                    <option>--Operation--</option>
                 </select>
             </div>
             <div class="card-header bg-danger-subtle border-bottom border-top border-dark">
@@ -70,7 +80,7 @@
                 <!-- Card content goes here -->
             </div>
             <div class="card-footer d-flex justify-content-end bg-danger-subtle border-top border-dark">
-                <button class="btn btn-success" type="submit">Apply</button>
+                <button id="applyButton" class="btn btn-success" type="submit">Apply</button>
             </div>
         </form>
     </div>
@@ -79,10 +89,11 @@
 <script>
     const mainDropdown = document.getElementById('Category');
     const subDropdown = document.getElementById('Operation');
+    const applyButton = document.getElementById('applyButton');
 
     // Define options for sub dropdown based on the selection in the main dropdown
     const optionsByMainDropdown = {
-      1: ["Operation"],
+      1: ["--Operation--"],
       2: ["Grayscale", "Invert", "Threshold"],
       3: ["Blur", "Sharpen", "Median"]
     };
@@ -98,6 +109,7 @@
         option.value = optionText; // You can set the value as needed
         subDropdown.appendChild(option);
       });
+      applyButton.disabled = selectedMainOption === '1';
     }
 
     // Initially populate sub dropdown based on the default selection in the main dropdown

@@ -6,6 +6,8 @@ import os
 import base64
 
 UPLOAD_FOLDER = 'uploads'
+image_path = os.path.join(UPLOAD_FOLDER, "image")
+processed_image_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
 
 # Create your views here.
 def mainView(request):
@@ -21,10 +23,7 @@ def upload(request):
             History.objects.all().delete()
             image = request.FILES['image']
 
-            # Save the uploaded image to disk
-            image_path = os.path.join(UPLOAD_FOLDER, "image")
-            processed_image_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
-
+            # Save the uploaded image
             with open(image_path, 'wb+') as destination:
                 for chunk in image.chunks():
                     destination.write(chunk)
@@ -79,3 +78,53 @@ def apply(request):
     }
     
     return render(request, 'editor.html', data)
+
+def delete(request, history_id):
+    try:
+        # Find the history entry with the given id
+        history_entry = History.objects.get(id=history_id)
+        # Delete the history entry
+        history_entry.delete()
+    except History.DoesNotExist:
+        pass
+
+    #Reset Processed image
+    uploaded_image = cv2.imread(image_path)
+    cv2.imwrite(processed_image_path, uploaded_image)
+    processed_image = cv2.imread(processed_image_path)
+
+    for entry in History.objects.all():
+        processed_image = Apply(processed_image, entry.operation)
+        cv2.imwrite(processed_image_path, processed_image)
+
+    # Encode the original image as base64
+    retval, buffer = cv2.imencode('.jpg', processed_image)
+    original_image_base64 = base64.b64encode(buffer).decode('utf-8')
+    history_entries = History.objects.all()
+    data = {
+        "original_image_base64":original_image_base64,
+        "history_entries":history_entries,
+    }
+    return render(request, "editor.html", data)
+
+def update(request):
+    data = {}
+    return render(request, "editor.html", data)
+
+def reset(request):
+    #Reset History table from database
+    History.objects.all().delete()
+
+    #Change the image back to original image
+    uploaded_image = cv2.imread(image_path)
+    cv2.imwrite(processed_image_path, uploaded_image)
+
+    # Encode the original image as base64
+    retval, buffer = cv2.imencode('.jpg', uploaded_image)
+    original_image_base64 = base64.b64encode(buffer).decode('utf-8')
+    history_entries = History.objects.all()
+    data = {
+        "original_image_base64":original_image_base64,
+        "history_entries":history_entries,
+    }
+    return render(request, "editor.html", data)
