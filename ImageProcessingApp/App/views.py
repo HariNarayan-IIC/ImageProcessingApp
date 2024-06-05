@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from django.http import FileResponse, Http404
 from .apply import Apply
 from .models import History
 import cv2
@@ -128,3 +129,11 @@ def reset(request):
         "history_entries":history_entries,
     }
     return render(request, "editor.html", data)
+
+
+def download(request):
+    file_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename='processed_image.png')
+    else:
+        raise Http404("File does not exist")

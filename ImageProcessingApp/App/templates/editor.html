@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+
+
+
 <div class = "row" style= "margin: 0px auto 0px auto">
+
+    <!---__________________________History card structure___________________________________-->
+
     <div class="col card shadow window p-0 border border-dark">
-        <div class="card-header bg-danger-subtle border-bottom border-dark">
+        <div class="card-header bg-secondary-subtle border-bottom border-dark">
             History
         </div>
         <div style="overflow-y: auto; height: calc(100% - 41px);">
@@ -21,23 +27,26 @@
                 <!-- Add more list items here if needed -->
             </ol>
         </div>
-        <div class="card-footer d-flex justify-content-end bg-danger-subtle border-top border-dark">
+        <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
             <a class="btn btn-danger" href="{% url "reset" %}">Reset</a>
         </div>
     </div>
 
 
+    <!--___________________________Image card structure_____________________________-->
+
     <div class= "col-7 shadow card window p-0 border border-dark">
-        <div class="d-flex justify-content-between card-header bg-danger-subtle border-bottom border-dark">
+        <div class="d-flex justify-content-between card-header bg-secondary-subtle border-bottom border-dark">
             <div>Original Image</div>
-            <div class="bg-danger-subtle">
+            <div class="bg-secondary-subtle">
                 Upload  
                 <a href="{% url "upload" %}">
-                    <i class="bi bi-upload btn btn-danger" style="font-size: 1rem; color: white"></i>
+                    <i class="bi bi-upload btn btn-secondary" style="font-size: 1rem; color: white"></i>
                 </a>
             </div>
         </div>
-        <div class="row image-container p-2">
+        <div class="row card-body image-container p-2"
+        style= "overflow-y: auto;">
             <!-- Original Image -->
             <div>
             {% if original_image_base64 %}
@@ -54,12 +63,16 @@
             {% endif %}
             </div> {% endcomment %}
         </div>
+        <div class = "card-footer d-flex justify-content-end border-top border-dark">
+            <a class="btn btn-success" href="{% url "download" %}" download="Edited_image.png">Save</a>
+        </div>
 
     </div>
 
+    <!--___________________________Tools card structure____________________________-->
 
     <div class="col shadow card p-0 window border border-dark">
-        <div class="card-header bg-danger-subtle border-bottom border-dark">
+        <div class="card-header bg-secondary-subtle border-bottom border-dark">
             Tools
         </div>
         <form class="d-flex flex-column" style="height: 100vh" action="{% url "apply" %}" method="get">
@@ -73,13 +86,13 @@
                     <option>--Operation--</option>
                 </select>
             </div>
-            <div class="card-header bg-danger-subtle border-bottom border-top border-dark">
+            <div class="card-header bg-secondary-subtle border-bottom border-top border-dark">
                 Attributes
             </div>
             <div class="card-body">
                 <!-- Card content goes here -->
             </div>
-            <div class="card-footer d-flex justify-content-end bg-danger-subtle border-top border-dark">
+            <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
                 <button id="applyButton" class="btn btn-success" type="submit">Apply</button>
             </div>
         </form>

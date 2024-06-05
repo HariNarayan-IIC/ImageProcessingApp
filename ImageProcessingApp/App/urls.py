@@ -7,5 +7,6 @@ urlpatterns = [
     path("apply/",  views.apply , name="apply"),
     path("delete/<int:history_id>/", views.delete, name="delete"),
     path("update/<int:history_id>/", views.update, name= "update"),
-    path("reset/", views.reset, name="reset")
+    path("reset/", views.reset, name="reset"),
+    path("download/", views.download, name="download")
 ]
