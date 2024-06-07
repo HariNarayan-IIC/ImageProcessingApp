@@ -45,8 +45,8 @@
                 </a>
             </div>
         </div>
-        <div class="row card-body image-container p-2"
-        style= "overflow-y: auto;">
+        <div class="card-body image-container p-2"
+        style= "overflow-y: auto; height: calc(100% - 78px);">
             <!-- Original Image -->
             <div>
             {% if original_image_base64 %}
@@ -76,7 +76,7 @@
             Tools
         </div>
         <form class="d-flex flex-column" style="height: 100vh" action="{% url "apply" %}" method="get">
-            <div class="m-2">
+            <div class="m-2" style="overflow-y: auto;">
                 <select id="Category" class="form-select mb-2 border border-dark">
                     <option value="1" style="color: #999">--Category--</option>
                     <option value="2">Pixel processing</option>
@@ -89,7 +89,7 @@
             <div class="card-header bg-secondary-subtle border-bottom border-top border-dark">
                 Attributes
             </div>
-            <div class="card-body">
+            <div class="card-body" style="overflow-y: auto; height: calc(100% - 260px);">
                 <!-- Card content goes here -->
             </div>
             <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
