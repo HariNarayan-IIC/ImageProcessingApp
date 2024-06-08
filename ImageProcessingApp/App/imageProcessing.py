@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 
+
 #Pixel processing
 def grayscale(image):
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
@@ -24,3 +25,6 @@ def blur(image):
 
 def median(image, k= 3):
     return cv.medianBlur(image, k)
+
+def gaussian_blur(image, kernel_size, std_dev):
+    return cv.GaussianBlur(image, (kernel_size, kernel_size), std_dev)
