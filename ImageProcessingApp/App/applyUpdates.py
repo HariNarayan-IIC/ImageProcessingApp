@@ -1,7 +1,9 @@
 from . import imageProcessing as ip
 from .models import Attribute, Operation, Parameter
 
-def Apply(image, selected_process, request, history_entry):
+def ApplyUpdates(image, entry):
+    selected_process = entry.operation
+    history_id = entry.id
 
     # Fetch the operation object
     operation = Operation.objects.get(name=selected_process)
@@ -13,16 +15,16 @@ def Apply(image, selected_process, request, history_entry):
     param_values = {}
 
     for param in parameters:
-        param_value = request.GET.get(param.name)
-        if param_value == "" or param_value is None:
-            param_value = param.default_value  # Assuming there's a default value in the model, or handle it as needed
+        attribute = Attribute.objects.get(history=history_id, name=param.name)
+        param_value = attribute.value
+
+        # Convert the parameter value to the correct type
         if param.valueType == 'number':
             param_value = int(param_value)
         elif param.valueType == 'float':
             param_value = float(param_value)
-        
+
         param_values[param.name] = param_value
-        Attribute.objects.create(name=param.name, value=str(param_value), history=history_entry)
 
     # Call the corresponding image processing function
     if selected_process == 'Blur':
