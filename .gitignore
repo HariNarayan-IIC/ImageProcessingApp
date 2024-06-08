@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+ImageProcessingApp/uploads/
 build/
 develop-eggs/
 dist/
