@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    var loadOperationsUrl = $('body').data('ajax-load-operations-url');
+    var loadParametersUrl = $('body').data('ajax-load-parameters-url');
     $('#Category').change(function() {
         var categoryId = $(this).val();
         $.ajax({
@@ -31,6 +33,7 @@ $(document).ready(function(){
             }
         });
     });
+
 
     // Handle click event on pencil icon
     // {% comment %} $('#update').click(function() {
