@@ -31,14 +31,15 @@ class Parameter(models.Model):
         ('text', 'String'),
         ('select', 'DropDown'),
         ('radio', "Radio buttons"),
-        ('checkbox', 'Checkbox')
+        ('checkbox', 'Checkbox'),
+        ('range', 'Slider'),
     ]
     name = models.CharField(max_length=50)
     dataType = models.CharField(max_length=50, choices= DATA_TYPE_CHOICES)
     inputType = models.CharField(max_length=50, choices= INPUT_TYPE_CHOICES)
-    default_value = models.CharField(max_length=50, blank=True)
-    min_value = models.CharField(max_length=50, null= True)
-    max_value = models.CharField(max_length=50, null= True)
+    defaultValue = models.CharField(max_length=50, blank=True)
+    minValue = models.CharField(max_length=50, null= True, blank= True)
+    maxValue = models.CharField(max_length=50, null= True, blank= True)
     oprID = models.ForeignKey(Operation, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -46,8 +47,8 @@ class Parameter(models.Model):
     
 class Option(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
-    option_no = models.IntegerField()
+    optionNo = models.IntegerField()
     value = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.parameter.name} {self.option_no}"
+        return f"{self.parameter.name} {self.optionNo}"

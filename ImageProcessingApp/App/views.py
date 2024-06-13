@@ -64,7 +64,12 @@ def load_operations(request):
 def load_parameters(request):
     operation_id = request.GET.get('operation_id')
     parameters = Parameter.objects.filter(oprID=operation_id).all()
-    return JsonResponse(list(parameters.values('id', 'name', 'valueType')), safe=False)
+    return JsonResponse(list(parameters.values('id', 'name', 'inputType', 'minValue', 'maxValue')), safe=False)
+
+def load_options(request):
+    parameter_id = request.GET.get('parameter_id')
+    options = Option.objects.filter(parameter=parameter_id).all()
+    return JsonResponse(list(options.values('id', 'optionNo', 'value')), safe=False)
 
 def apply(request):
 
@@ -160,7 +165,6 @@ def reset(request):
     }
     return render(request, "editor.html", data)
 
-
 def download(request):
     file_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
     if os.path.exists(file_path):
@@ -173,6 +177,9 @@ def fetch_parameters(request):
     parameters = Parameter.objects.filter(history_id=history_id)
     parameter_list = [{'name': param.name, 'value': param.value} for param in parameters]
     return JsonResponse({'parameters': parameter_list})
+
+def fetch_options(request):
+    return
 
 def update_parameters(request):
     if request.method == 'POST':

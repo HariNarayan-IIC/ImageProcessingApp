@@ -1,4 +1,8 @@
 <script>
+    function updateRangeValue(rangeInput) {
+        var spanId = rangeInput.id + '_value';
+        $('#' + spanId).text(rangeInput.value);
+    }
     $(document).ready(function(){
         $('#Category').change(function() {
             var categoryId = $(this).val();
@@ -16,6 +20,7 @@
             });
         });
     
+        
         $('#Operation').change(function() {
             var operationId = $(this).val();
             $.ajax({
@@ -26,13 +31,36 @@
                 success: function(data) {
                     $('#parameters').empty();
                     data.forEach(function(parameter) {
-                        $('#parameters').append('<label for="' + parameter.id + '">' + parameter.name + ' (' + parameter.valueType + '):</label>');
-                        $('#parameters').append('<input type="' + parameter.valueType + 'class = "form-control"' + '" id="' + parameter.id + '" name="' + parameter.name + '"><br>');
+                        if (parameter.inputType=='range'){
+                            $('#parameters').append('<label for="'+ parameter.id +'" class="form-label">'+ parameter.name +' :</label>');
+                            $('#parameters').append('<input type="range" class="form-range" min="'+parameter.minValue+'" max="'+parameter.maxValue+'" id="'+ parameter.id + '" name="' + parameter.name +'" oninput="updateRangeValue(this)">');
+                            $('#parameters').append('<span id="'+ parameter.id +'_value">'+ parameter.minValue +'</span><br>');
+                        }
+                        else if (parameter.inputType=='select'){
+                            $.ajax({
+                                url: '{% url "ajax_load_options" %}',
+                                data: {
+                                    'parameter_id': parameter.id
+                                },
+                                success: function(data) {
+                                    var selectHtml = '<select class="form-select" aria-label="Default select example" name="' + parameter.name +'"><br>';
+                                    data.forEach(function(option) {
+                                        selectHtml += '<option>'+ option.value +'</option>';
+                                    });
+                                    selectHtml += '</select>';
+                                    $('#parameters').append(selectHtml);
+                                }
+                            });
+                        }    
+                        else {
+                            $('#parameters').append('<label for="' + parameter.id + '">' + parameter.name +':</label><br>');
+                            $('#parameters').append('<input type="' + parameter.inputType + 'class = "form-control"' + '" id="' + parameter.id + '" name="' + parameter.name + '"><br>');
+                        }
                     });
                 }
             });
         });
-    
+        
     
         // Handle click event on pencil icon
         //$('#update').click(function() {

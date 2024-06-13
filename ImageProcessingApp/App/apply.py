@@ -13,13 +13,16 @@ def Apply(image, selected_process, request, history_entry):
     param_values = {}
 
     for param in parameters:
-        param_value = request.GET.get(param.name)
+        param_value = request.GET.get(param.name)  
         if param_value == "" or param_value is None:
-            param_value = param.default_value  # Assuming there's a default value in the model, or handle it as needed
-        if param.valueType == 'number':
+            param_value = param.defaultValue  # Assuming there's a default value in the model, or handle it as needed
+        if param.dataType == 'int':
             param_value = int(param_value)
-        elif param.valueType == 'float':
+        elif param.dataType == 'float':
             param_value = float(param_value)
+        elif param.dataType == 'str':
+            param_value = str(param_value)
+        
         
         param_values[param.name] = param_value
         Attribute.objects.create(name=param.name, value=str(param_value), history=history_entry)
@@ -40,12 +43,26 @@ def Apply(image, selected_process, request, history_entry):
     elif selected_process == 'Gaussian Blur':
         return ip.gaussian_blur(image, param_values.get('Kernel Size'), param_values.get('Standard Deviation', 1.0))
     elif selected_process == 'RGB separation':
-        return ip.rgb_separation(image, channel= "green")
+        return ip.rgb_separation(image, channel= param_values.get('Channel'))
     elif selected_process == 'Brighten':
-        return ip.brighten(image, constant= param_values.get('Constant'))
+        return ip.brighten(image, constant= param_values.get('Brighten by'))
     elif selected_process == 'Darken':
-        return ip.darken(image, constant= param_values.get('Constant'))
+        return ip.darken(image, constant= param_values.get('Darken by'))
     elif selected_process == 'Bilateral':
-        return ip.bilateral(image, param_values.get('Kernel Size'))
+        return ip.bilateral(image, param_values.get('Kernel Size'), param_values.get('Std Dev Color'), param_values.get('Std Dev Space'))
+    elif selected_process == 'Rotate 90 Clockwise':
+        return ip.rotate_right_by_90(image)
+    elif selected_process == 'Rotate 90 Anticlockwise':
+        return ip.rotate_left_by_90(image)
+    elif selected_process == 'Rotate 180':
+        return ip.rotate_180(image)
+    elif selected_process == 'Horizontal Flip':
+        return ip.horizontal_flip(image)
+    elif selected_process == 'Vertical Flip':
+        return ip.vertical_flip(image)
+    elif selected_process == 'Sobel':
+        return ip.sobel(image, param_values.get('Threshold'))
+    elif selected_process == "Canny":
+        return ip.canny(image, param_values.get('Threshold 1'), param_values.get('Threshold 2'))
 
     # Add more operations as needed
