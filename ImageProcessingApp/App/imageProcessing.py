@@ -61,34 +61,61 @@ def canny(image, t_1, t_2):
     return cv.Canny(image, t_1, t_2)
 
 def laplacian(image):
-    return
+    return cv.Laplacian(image, -1)
 
 #Histogram
 def histogram_equalization(image):
-    return
+    gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    return cv.equalizeHist(gray_image)
 
-def clahe(image):
-    return
+def clahe(image, clipLimit= 2, k= 8):
+    gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    clahe = cv.createCLAHE(clipLimit=clipLimit, tileGridSize=(k,k))
+    return clahe.apply(gray_image)
+
 
 #Morphological
-def erosion(image):
-    return
+def erosion(image, k=3, i=1):
+    kernel= np.ones((k,k), np.uint8)
+    return cv.erode(image, kernel, iterations= i)
 
-def dialtion(image):
-    return
+def dialtion(image, k= 3, i=1):
+    kernel= np.ones((k,k), np.uint8)
+    return cv.dilate(image, kernel, iterations= i)
 
-def opening(image):
-    return
+def opening(image, k= 3):
+    kernel= np.ones((k,k), np.uint8)
+    return cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
 
-def closing(image):
-    return
+def closing(image, k= 3):
+    kernel= np.ones((k,k), np.uint8)
+    return cv.morphologyEx(image, cv.MORPH_CLOSE, kernel)
 
 #Image segmentation
-def adaptive_thresholding(image):
-    return
+def adaptive_thresholding(image, type, k):
+    print(k)
+    gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    if type == "Mean":
+        return cv.adaptiveThreshold(gray_image,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY,k,2)
+    else:
+        return cv.adaptiveThreshold(gray_image,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,k,2)
 
-def k_means_clustering(image):
-    return
+def k_means_clustering(image, K= 8):
+    Z = image.reshape((-1,3))
+ 
+    # convert to np.float32
+    Z = np.float32(Z)
+    
+    # define criteria, number of clusters(K) and apply kmeans()
+    criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+
+    ret,label,center=cv.kmeans(Z,K,None,criteria,10,cv.KMEANS_RANDOM_CENTERS)
+    
+    # Now convert back into uint8, and make original image
+    center = np.uint8(center)
+    res = center[label.flatten()]
+    res2 = res.reshape((image.shape))
+    return res2
 
 #Geometrical
 def resize(image):

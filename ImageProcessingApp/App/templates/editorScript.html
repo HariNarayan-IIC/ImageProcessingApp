@@ -23,10 +23,12 @@
         
         $('#Operation').change(function() {
             var operationId = $(this).val();
+            var type = "apply";
             $.ajax({
                 url: '{% url "ajax_load_parameters" %}',
                 data: {
-                    'operation_id': operationId
+                    'operation_id': operationId,
+                    'type': type
                 },
                 success: function(data) {
                     $('#parameters').empty();
@@ -37,10 +39,12 @@
                             $('#parameters').append('<span id="'+ parameter.id +'_value">'+ parameter.minValue +'</span><br>');
                         }
                         else if (parameter.inputType=='select'){
+                            
                             $.ajax({
                                 url: '{% url "ajax_load_options" %}',
                                 data: {
                                     'parameter_id': parameter.id
+                                    
                                 },
                                 success: function(data) {
                                     var selectHtml = '<select class="form-select" aria-label="Default select example" name="' + parameter.name +'"><br>';
@@ -63,17 +67,63 @@
         
     
         // Handle click event on pencil icon
-        //$('#update').click(function() {
-        //    console.log("I am here");
-        //    $('#updateModal').modal('show');
-        //}); 
+        $('.update').click(function() {
+            $('#updateModal').modal('show');
+            event.preventDefault()
+            var historyId = $(this).data('history');
+            console.log(historyId);
+            var type= "update";
+            $.ajax({
+                url: '{% url "ajax_load_parameters" %}',
+                data: {
+                    'history_id': historyId,
+                    'type': type
+                },
+                success: function(data) {
+                    $('#updateForm').empty();
+                    $('#updateForm').append('<input type= "hidden" name="history_id" value="'+ historyId +'">');
+                    data.forEach(function(parameter) {
+                        if (parameter.inputType=='range'){
+                            $('#updateForm').append('<label for="'+ parameter.id +'" class="form-label">'+ parameter.name +' :</label>');
+                            $('#updateForm').append('<input type="range" class="form-range" min="'+parameter.minValue+'" max="'+parameter.maxValue+'" id="'+ parameter.id + '" name="' + parameter.name +'" oninput="updateRangeValue(this)">');
+                            $('#updateForm').append('<span id="'+ parameter.id +'_value">'+ parameter.minValue +'</span><br>');
+                        }
+                        else if (parameter.inputType=='select'){
+                            
+                            $.ajax({
+                                url: '{% url "ajax_load_options" %}',
+                                data: {
+                                    'parameter_id': parameter.id,
+                                    
+                                },
+                                success: function(data) {
+                                    var selectHtml = '<select class="form-select" aria-label="Default select example" name="' + parameter.name +'"><br>';
+                                    data.forEach(function(option) {
+                                        selectHtml += '<option>'+ option.value +'</option>';
+                                    });
+                                    selectHtml += '</select>';
+                                    $('#updateForm').append(selectHtml);
+                                }
+                            });
+                        }    
+                        else {
+                            $('#updateForm').append('<label for="' + parameter.id + '">' + parameter.name +':</label><br>');
+                            $('#updateForm').append('<input type="' + parameter.inputType + 'class = "form-control"' + '" id="' + parameter.id + '" name="' + parameter.name + '"><br>');
+                        }
+                    });
+                }
+            });
+        }); 
     
         //const myModal = document.getElementById('myModal')
-        //const myInput = document.getElementById('myInput')
     
         //myModal.addEventListener('shown.bs.modal', () => {
-        //myInput.focus()
+        //    myInput.focus();
         //});
+
+        $('#updateButton').click(function() {
+            $('#updateForm').submit();
+        });
     
     });
 </script>

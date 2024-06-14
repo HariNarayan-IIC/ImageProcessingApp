@@ -64,5 +64,25 @@ def Apply(image, selected_process, request, history_entry):
         return ip.sobel(image, param_values.get('Threshold'))
     elif selected_process == "Canny":
         return ip.canny(image, param_values.get('Threshold 1'), param_values.get('Threshold 2'))
+    elif selected_process == "Laplacian":
+        return ip.laplacian(image)
+    elif selected_process == "Global HE":
+        return ip.histogram_equalization(image)
+    elif selected_process == "CLAHE":
+        return ip.clahe(image, param_values.get('Clip Limit'), param_values.get('Tile Size'))
+    elif selected_process == 'Erosion':
+        return ip.erosion(image, param_values.get('Kernel Size'), param_values.get('Iterations'))
+    elif selected_process == 'Dilation':
+        return ip.dialtion(image, param_values.get('Kernel Size'), param_values.get('Iterations'))
+    elif selected_process == 'Opening':
+        return ip.opening(image, param_values.get('Kernel Size'))
+    elif selected_process == 'Closing':
+        return ip.closing(image, param_values.get('Kernel Size'))
+    elif selected_process == 'Adaptive thresholding':
+        return ip.adaptive_thresholding(image, param_values.get('Type'), param_values.get('Tile size'))
+    elif selected_process == 'K means clustering':
+        return ip.k_means_clustering(image, param_values.get("K clusters"))
+    
+    
 
     # Add more operations as needed

@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .apply import Apply
 from .applyUpdates import ApplyUpdates
 from .models import *
+from django.db.models import Q
 import cv2
 import os
 import base64
@@ -62,7 +63,12 @@ def load_operations(request):
     return JsonResponse(list(operations.values('id', 'name')), safe=False)
 
 def load_parameters(request):
-    operation_id = request.GET.get('operation_id')
+    if (request.GET.get('type')=="apply"):
+        operation_id = request.GET.get('operation_id')
+    elif (request.GET.get('type')=="update"):
+        history_id = request.GET.get('history_id')
+        operation_id = Operation.objects.get(name= History.objects.get(id=history_id).operation).id
+
     parameters = Parameter.objects.filter(oprID=operation_id).all()
     return JsonResponse(list(parameters.values('id', 'name', 'inputType', 'minValue', 'maxValue')), safe=False)
 
@@ -140,7 +146,60 @@ def delete(request, history_id):
     return render(request, "editor.html", data)
 
 def update(request):
-    data = {}
+    try:
+        # Find the history entry with the given id
+        history_entry = History.objects.get(id=request.GET.get('history_id'))
+
+        # Update the history entry
+        operation = Operation.objects.get(name=history_entry.operation)
+
+        # Fetch all parameters associated with this operation
+        parameters = Parameter.objects.filter(oprID=operation)
+
+        # Create a dictionary to store parameter values
+        param_values = {}
+
+        for param in parameters:
+            param_value = request.GET.get(param.name)  
+            if param_value == "" or param_value is None:
+                param_value = param.defaultValue  # Assuming there's a default value in the model, or handle it as needed
+            if param.dataType == 'int':
+                param_value = int(param_value)
+            elif param.dataType == 'float':
+                param_value = float(param_value)
+            elif param.dataType == 'str':
+                param_value = str(param_value)
+            
+            param_values[param.name] = param_value
+            att_entity= Attribute.objects.get(name=param.name, history=history_entry.id)
+
+            att_entity.value= param_values.get(param.name)
+            att_entity.save()
+    except History.DoesNotExist:
+        pass
+
+    #Reset Processed image
+    uploaded_image = cv2.imread(image_path)
+    cv2.imwrite(processed_image_path, uploaded_image)
+    processed_image = cv2.imread(processed_image_path)
+
+
+    for entry in History.objects.all():
+        processed_image = ApplyUpdates(processed_image, entry)
+        cv2.imwrite(processed_image_path, processed_image)
+    print("\n\nI am here \n\n")
+    # Encode the original image as base64
+    retval, buffer = cv2.imencode('.jpg', processed_image)
+    original_image_base64 = base64.b64encode(buffer).decode('utf-8')
+    history_entries = History.objects.all()
+    attribute_entries = Attribute.objects.all()
+    category_entries = Category.objects.all()
+    data = {
+        "original_image_base64":original_image_base64,
+        "history_entries":history_entries,
+        "attribute_entries": attribute_entries,
+        "category_entries": category_entries,
+    }
     return render(request, "editor.html", data)
 
 def reset(request):
