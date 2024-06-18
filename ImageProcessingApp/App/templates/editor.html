@@ -12,7 +12,7 @@
             History
         </div>
         <div style="overflow-y: auto; height: calc(100% - 41px);">
-            <ol class="list-group list-group-numbered">
+            <ol class="list-group list-group-numbered" id="historyList">
                 {% for entry in history_entries%}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
@@ -36,6 +36,7 @@
             </ol>
         </div>
         <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
+            <a class="btn btn-success me-2" href= "#" id="applyToBatchButton">Apply to Batch</a>
             <a class="btn btn-danger" href="{% url "reset" %}">Reset</a>
         </div>
     </div>
@@ -144,8 +145,44 @@
         </div>
       </div>
 
-</div>
 
+    <!--============================================================================-->
+    <!--                            Update modal popup                              -->
+    <!--============================================================================-->
+  
+    <!-- Modal -->
+    <div class="modal" id="applyToBatchModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Apply to batch</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form action={% url "upload" %} method="post" enctype="multipart/form-data" id="batchForm">
+                    {% csrf_token %}
+                    <label>Upload a .zip file of repository consisting of all your images to be processed.</label>
+                    <div>
+                        <input class="form-control border border-dark" type="file" name="sourceDirectory" accept=".zip">
+                    </div>
+                </form>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="uploadBatchButton">Apply</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+
+</div>
 
 {% include "editorScript.html" %}
 

@@ -19,12 +19,12 @@ def ApplyUpdates(image, entry):
         param_value = attribute.value
 
         # Convert the parameter value to the correct type
-        if param.dataType == 'number':
+        if param.dataType == 'int':
             param_value = int(param_value)
         elif param.dataType == 'float':
             param_value = float(param_value)
-        elif param.dataType == 'string':
-            continue
+        elif param.dataType == 'str':
+            param_value = str(param_value)
 
         param_values[param.name] = param_value
 

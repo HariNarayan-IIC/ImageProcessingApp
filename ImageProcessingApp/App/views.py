@@ -187,7 +187,7 @@ def update(request):
     for entry in History.objects.all():
         processed_image = ApplyUpdates(processed_image, entry)
         cv2.imwrite(processed_image_path, processed_image)
-    print("\n\nI am here \n\n")
+    
     # Encode the original image as base64
     retval, buffer = cv2.imencode('.jpg', processed_image)
     original_image_base64 = base64.b64encode(buffer).decode('utf-8')
