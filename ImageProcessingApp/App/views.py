@@ -8,10 +8,13 @@ from django.db.models import Q
 import cv2
 import os
 import base64
+import zipfile
 
 UPLOAD_FOLDER = 'uploads'
+BATCH_FOLDER = 'batchUploads'
 image_path = os.path.join(UPLOAD_FOLDER, "image")
 processed_image_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
+batch_path = os.path.join(BATCH_FOLDER, "zipFile.zip")
 
 # Create your views here.
 def mainView(request):
@@ -251,3 +254,26 @@ def update_parameters(request):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False})
+    
+def uploadZip(request):
+
+    if not os.path.exists(BATCH_FOLDER):
+        os.makedirs(BATCH_FOLDER)
+    if request.method == 'POST':
+        # Check if the form is valid
+        if 'sourceDirectory' in request.FILES:
+            History.objects.all().delete()
+            zipFile = request.FILES['sourceDirectory']
+        
+            with open(batch_path, 'wb+') as destination:
+                        for chunk in zipFile.chunks():
+                            destination.write(chunk)
+
+            with zipfile.ZipFile(batch_path, 'r') as zip_ref:
+                zip_ref.extractall(BATCH_FOLDER)
+
+            
+
+            return HttpResponse('Success')
+    return HttpResponse("Failed")
+

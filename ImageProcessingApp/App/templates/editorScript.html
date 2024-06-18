@@ -135,6 +135,11 @@
             
         })
 
+        $('#uploadBatchButton').click(function(){
+            $('#batchForm').submit();
+            $('#applyToBatchModal').madal('hide');
+        })
+
         $('#updateButton').click(function() {
             $('#updateForm').submit();
         });

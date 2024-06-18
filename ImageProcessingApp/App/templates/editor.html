@@ -163,7 +163,7 @@
       
             <!-- Modal body -->
             <div class="modal-body">
-                <form action={% url "upload" %} method="post" enctype="multipart/form-data" id="batchForm">
+                <form action={% url "uploadZip" %} method="post" enctype="multipart/form-data" id="batchForm">
                     {% csrf_token %}
                     <label>Upload a .zip file of repository consisting of all your images to be processed.</label>
                     <div>
