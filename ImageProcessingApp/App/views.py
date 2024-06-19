@@ -9,12 +9,18 @@ import cv2
 import os
 import base64
 import zipfile
+import shutil
 
 UPLOAD_FOLDER = 'uploads'
 BATCH_FOLDER = 'batchUploads'
+EXTRACTED_BATCH_FOLDER = os.path.join(BATCH_FOLDER, 'extracted')
+PROCESSED_BATCH_FOLDER = 'processedBatchUploads'
+COMPRESSED_BATCH_FOLDER = 'compressedBatch'
 image_path = os.path.join(UPLOAD_FOLDER, "image")
 processed_image_path = os.path.join(UPLOAD_FOLDER, "processed_image.png")
 batch_path = os.path.join(BATCH_FOLDER, "zipFile.zip")
+compressed_batch_path = os.path.join(COMPRESSED_BATCH_FOLDER, 'processedZipFile.zip')
+
 
 # Create your views here.
 def mainView(request):
@@ -259,21 +265,98 @@ def uploadZip(request):
 
     if not os.path.exists(BATCH_FOLDER):
         os.makedirs(BATCH_FOLDER)
-    if request.method == 'POST':
-        # Check if the form is valid
-        if 'sourceDirectory' in request.FILES:
-            History.objects.all().delete()
-            zipFile = request.FILES['sourceDirectory']
+    
+
+    if not os.path.exists(PROCESSED_BATCH_FOLDER):
+        os.makedirs(PROCESSED_BATCH_FOLDER)
+    else:
+        try:
+            shutil.rmtree(PROCESSED_BATCH_FOLDER)
+            print(f"Deleted folder: {PROCESSED_BATCH_FOLDER}")
+            os.makedirs(PROCESSED_BATCH_FOLDER)
+        except Exception as e:
+            print(f"Failed to delete folder: {PROCESSED_BATCH_FOLDER} - {e}")
         
+
+
+    if not os.path.exists(EXTRACTED_BATCH_FOLDER):
+        os.makedirs(EXTRACTED_BATCH_FOLDER)
+    else:
+        try:
+            shutil.rmtree(EXTRACTED_BATCH_FOLDER)
+            print(f"Deleted folder: {EXTRACTED_BATCH_FOLDER}")
+            os.makedirs(EXTRACTED_BATCH_FOLDER)
+        except Exception as e:
+            print(f"Failed to delete folder: {EXTRACTED_BATCH_FOLDER} - {e}")
+        
+
+    if not os.path.exists(COMPRESSED_BATCH_FOLDER):
+        os.makedirs(COMPRESSED_BATCH_FOLDER)
+    else:
+        try:
+            shutil.rmtree(COMPRESSED_BATCH_FOLDER)
+            print(f"Deleted folder: {COMPRESSED_BATCH_FOLDER}")
+            os.makedirs(COMPRESSED_BATCH_FOLDER)
+        except Exception as e:
+            print(f"Failed to delete folder: {COMPRESSED_BATCH_FOLDER} - {e}")
+
+    if request.method == 'POST':
+        if 'sourceDirectory' in request.FILES:
+            zipFile = request.FILES['sourceDirectory']
+
+            # Save uploaded zip file
             with open(batch_path, 'wb+') as destination:
-                        for chunk in zipFile.chunks():
-                            destination.write(chunk)
+                for chunk in zipFile.chunks():
+                    destination.write(chunk)
 
+            # Extract zip file
             with zipfile.ZipFile(batch_path, 'r') as zip_ref:
-                zip_ref.extractall(BATCH_FOLDER)
+                zip_ref.extractall(EXTRACTED_BATCH_FOLDER)
 
+            file_paths = [os.path.join(root, file) for root, _, files in os.walk(EXTRACTED_BATCH_FOLDER) for file in files]
+
+            for file_path in file_paths:
+                relative_path = os.path.relpath(file_path, EXTRACTED_BATCH_FOLDER)
+                new_path = os.path.join(PROCESSED_BATCH_FOLDER, relative_path)
+                os.makedirs(os.path.dirname(new_path), exist_ok=True)
+                if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.tif', '.jfif')):
+                    try:
+                        img = cv2.imread(file_path)
+                        if img is not None:
+                            # Perform your image processing here
+                            print(f"Processing image: {file_path}")
+
+                            processed_image = img
+
+                            for entry in History.objects.all():
+                                processed_image = ApplyUpdates(processed_image, entry)
+
+                            # Save the processed image to new_path
+                            try:
+                                cv2.imwrite(new_path, processed_image)
+                            except:
+                                cv2.imwrite(new_path+'.png', processed_image)
+                        else:
+                            print(f"Failed to read image: {file_path}")
+                    except Exception as e:
+                        print(f"Error processing image {file_path}: {e}")
+                else:
+                    shutil.copy(file_path, new_path)
             
 
-            return HttpResponse('Success')
+            # Compress the processed files into a new zip file
+            with zipfile.ZipFile(compressed_batch_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for root, _, files in os.walk(PROCESSED_BATCH_FOLDER):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        arcname = os.path.relpath(file_path, PROCESSED_BATCH_FOLDER)
+                        print(f"Compressing image: {file_path}")
+                        zipf.write(file_path, arcname)
+
+            if os.path.exists(compressed_batch_path):
+                return FileResponse(open(compressed_batch_path, 'rb'), as_attachment=True, filename='processed_dataSet.zip')
     return HttpResponse("Failed")
 
+
+# def applyToZip():
+#     return
