@@ -16,6 +16,8 @@
         }
 
         updateButtonState();
+
+
         $('#Category').change(function() {
             var categoryId = $(this).val();
             $.ajax({
@@ -77,6 +79,7 @@
             });
         });
         
+
         $('.btn').click(function() {
             updateButtonState();
         });
@@ -84,7 +87,7 @@
         // Handle click event on pencil icon
         $('.update').click(function() {
             $('#updateModal').modal('show');
-            event.preventDefault()
+            event.preventDefault();
             var historyId = $(this).data('history');
             console.log(historyId);
             var type= "update";
@@ -135,9 +138,38 @@
             
         })
 
+        $('selectedZipFile').change(function(){
+            $('#uploadBatchButton').removeClass('disabled');
+            $('#uploadBatchButton').show();
+            $('#downloadBatchButton').attr('hidden',true);
+        })
+
         $('#uploadBatchButton').click(function(){
+            $(this).addClass('disabled');
+            $(this).empty();
+            $(this).append('<span class="spinner-border spinner-border-sm" aria-hidden="true">');
+            $(this).append('</span><span role="status">Processing...</span>');
+            $('#batchForm').submit(function(event){
+                event.preventDefault();
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    url: "{% url "uploadZip" %}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        console.log(data);
+                        $('#uploadBatchButton').removeClass('disabled');
+                        $('#uploadBatchButton').hide();
+                        $('#downloadBatchButton').attr('hidden',false);
+                    }
+                });
+            })
             $('#batchForm').submit();
-            $('#applyToBatchModal').madal('hide');
+            
+            //
         })
 
         $('#updateButton').click(function() {

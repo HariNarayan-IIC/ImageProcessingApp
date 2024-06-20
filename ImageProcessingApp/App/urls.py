@@ -16,4 +16,5 @@ urlpatterns = [
     path('fetch-options/', views.fetch_options, name = "fetch_options"),
     path('update-parameters/', views.update_parameters, name='update_parameters'),
     path('uploadZip/', views.uploadZip, name='uploadZip'),
+    path('downloadZip/', views.downloadBatchAsZip, name='downloadBatchAsZip')
 ]

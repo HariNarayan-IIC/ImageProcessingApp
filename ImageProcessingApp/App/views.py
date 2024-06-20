@@ -301,6 +301,7 @@ def uploadZip(request):
             print(f"Failed to delete folder: {COMPRESSED_BATCH_FOLDER} - {e}")
 
     if request.method == 'POST':
+
         if 'sourceDirectory' in request.FILES:
             zipFile = request.FILES['sourceDirectory']
 
@@ -343,7 +344,6 @@ def uploadZip(request):
                 else:
                     shutil.copy(file_path, new_path)
             
-
             # Compress the processed files into a new zip file
             with zipfile.ZipFile(compressed_batch_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
                 for root, _, files in os.walk(PROCESSED_BATCH_FOLDER):
@@ -352,11 +352,13 @@ def uploadZip(request):
                         arcname = os.path.relpath(file_path, PROCESSED_BATCH_FOLDER)
                         print(f"Compressing image: {file_path}")
                         zipf.write(file_path, arcname)
-
-            if os.path.exists(compressed_batch_path):
-                return FileResponse(open(compressed_batch_path, 'rb'), as_attachment=True, filename='processed_dataSet.zip')
+            
+            return HttpResponse("Successfully processed")
+      
     return HttpResponse("Failed")
 
 
-# def applyToZip():
-#     return
+def downloadBatchAsZip(request):
+    if os.path.exists(compressed_batch_path):
+        return FileResponse(open(compressed_batch_path, 'rb'), as_attachment=True, filename='processed_dataSet.zip')
+    return HttpResponse('Failed')
