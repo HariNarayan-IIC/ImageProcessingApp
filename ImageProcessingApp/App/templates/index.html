@@ -2,8 +2,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class= "d-flex justify-content-center">
-    <div class="card text-center shadow border border-dark" style="max-width: 620px; margin-top: 24px">
-        <div class="card-header bg-secondary-subtle border-bottom border-dark">
+    <div class="card text-center shadow border border-light" style="max-width: 620px; margin-top: 24px">
+        <div class="card-header bg-secondary-subtle border-bottom border-light">
         <h5>Upload Image</h5>
         </div>
         <div class="card-body">
@@ -12,14 +12,15 @@
         <form action={% url "upload" %} method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div>
-                    <input class="form-control border border-dark" type="file" name="image" accept="image/*">
+                    <input class="form-control border border-light" type="file" name="image" accept="image/*">
                     <button class="btn btn-outline-success" type="submit">Upload</button>
                 </div>
             </form>
         </div>
-        <div class="card-footer text-body-secondary bg-secondary-subtle border-top border-dark">
+        <div class="card-footer text-body-secondary bg-secondary-subtle border-top border-light">
             {{Message}}
         </div>
     </div>
     </div>
+    {% include "indexScript.html" %}
 {% endblock content %}

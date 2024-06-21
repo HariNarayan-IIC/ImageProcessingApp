@@ -48,9 +48,20 @@
                     $('#parameters').empty();
                     data.forEach(function(parameter) {
                         if (parameter.inputType=='range'){
-                            $('#parameters').append('<label for="'+ parameter.id +'" class="form-label">'+ parameter.name +' :</label>');
-                            $('#parameters').append('<input type="range" class="form-range" min="'+parameter.minValue+'" max="'+parameter.maxValue+'" id="'+ parameter.id + '" name="' + parameter.name +'" oninput="updateRangeValue(this)">');
-                            $('#parameters').append('<span id="'+ parameter.id +'_value">'+ parameter.minValue +'</span><br>');
+                            let html = `
+                                <div class="d-flex">
+                                    <label for="${parameter.id}" class="form-label">${parameter.name} :</label>
+                                    <span id="${parameter.id}_value" class="ms-1">${parameter.defaultValue}</span>
+                                </div>
+                                
+                                <input type="range" class="form-range" min="${parameter.minValue}" max="${parameter.maxValue}" value="${parameter.defaultValue}" id="${parameter.id}" name="${parameter.name}" oninput="updateRangeValue(this)">
+                                <div class="d-flex">
+                                    <label class="me-auto">${parameter.minValue}</label>
+                                    <label>${parameter.maxValue}</label>
+                                </div> 
+                            `;
+                            $('#parameters').append(html);
+                            
                         }
                         else if (parameter.inputType=='select'){
                             
@@ -102,9 +113,19 @@
                     $('#updateForm').append('<input type= "hidden" name="history_id" value="'+ historyId +'">');
                     data.forEach(function(parameter) {
                         if (parameter.inputType=='range'){
-                            $('#updateForm').append('<label for="'+ parameter.id +'" class="form-label">'+ parameter.name +' :</label>');
-                            $('#updateForm').append('<input type="range" class="form-range" min="'+parameter.minValue+'" max="'+parameter.maxValue+'" id="'+ parameter.id + '" name="' + parameter.name +'" oninput="updateRangeValue(this)">');
-                            $('#updateForm').append('<span id="'+ parameter.id +'_value">'+ parameter.minValue +'</span><br>');
+                            let html = `
+                                <div class="d-flex">
+                                    <label for="${parameter.id}" class="form-label">${parameter.name} :</label>
+                                    <span id="${parameter.id}_value" class="ms-1">${parameter.currentValue}</span>
+                                </div>
+                                
+                                <input type="range" class="form-range" min="${parameter.minValue}" max="${parameter.maxValue}" value="${parameter.currentValue}" id="${parameter.id}" name="${parameter.name}" oninput="updateRangeValue(this)">
+                                <div class="d-flex">
+                                    <label class="me-auto">${parameter.minValue}</label>
+                                    <label>${parameter.maxValue}</label>
+                                </div> 
+                            `;
+                            $('#updateForm').append(html);
                         }
                         else if (parameter.inputType=='select'){
                             

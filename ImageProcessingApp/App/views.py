@@ -74,12 +74,18 @@ def load_operations(request):
 def load_parameters(request):
     if (request.GET.get('type')=="apply"):
         operation_id = request.GET.get('operation_id')
+        parameters = Parameter.objects.filter(oprID=operation_id).all()
+        return JsonResponse(list(parameters.values('id', 'name', 'inputType', 'minValue', 'maxValue', 'defaultValue')), safe=False)
     elif (request.GET.get('type')=="update"):
         history_id = request.GET.get('history_id')
         operation_id = Operation.objects.get(name= History.objects.get(id=history_id).operation).id
-
-    parameters = Parameter.objects.filter(oprID=operation_id).all()
-    return JsonResponse(list(parameters.values('id', 'name', 'inputType', 'minValue', 'maxValue')), safe=False)
+        parameters = Parameter.objects.filter(oprID=operation_id).all()
+        lst = list(parameters.values('id', 'name', 'inputType', 'minValue', 'maxValue', 'defaultValue'))
+        print(lst)
+        for dictionary in lst:
+            dictionary['currentValue']= Attribute.objects.get(name=dictionary['name'], history=history_id).value
+        print(lst)
+        return JsonResponse(lst, safe=False)
 
 def load_options(request):
     parameter_id = request.GET.get('parameter_id')

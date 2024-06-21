@@ -1,0 +1,22 @@
+<script>
+    $(document).ready(function(){
+        $('#colorMode').change(function(){
+            if ($(this).prop('checked')==true){
+                console.log('Dark Mode');
+                $('.border').addClass('border-light').removeClass('border-dark');
+                $('.border-bottom').addClass('border-light').removeClass('border-dark');
+                $('.border-top').addClass('border-light').removeClass('border-dark');
+                $('html').attr('data-bs-theme', 'dark');
+                $('.navbar').addClass('bg-dark').removeClass('bg-secondary');
+            }
+            else {
+                console.log('Light Mode');
+                $('.border').addClass('border-dark').removeClass('border-light');
+                $('.border-bottom').addClass('border-dark').removeClass('border-light');
+                $('.border-top').addClass('border-dark').removeClass('border-light');
+                $('html').attr('data-bs-theme', 'light');
+                $('.navbar').addClass('bg-secondary').removeClass('bg-dark');
+            }
+        })
+    });
+</script>
