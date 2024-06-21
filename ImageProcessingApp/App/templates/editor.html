@@ -7,8 +7,8 @@
     <!--                            History card structure                          -->
     <!--============================================================================-->
 
-    <div class="col card shadow window p-0 border border-dark">
-        <div class="card-header bg-secondary-subtle border-bottom border-dark">
+    <div class="col card shadow window p-0 border border-light">
+        <div class="card-header bg-secondary-subtle border-bottom border-light">
             History
         </div>
         <div style="overflow-y: auto; height: calc(100% - 41px);">
@@ -35,7 +35,7 @@
                 <!-- Add more list items here if needed -->
             </ol>
         </div>
-        <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
+        <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-light">
             <a class="btn btn-success me-2" href= "#" id="applyToBatchButton">Apply to Batch</a>
             <a class="btn btn-danger" href="{% url "reset" %}">Reset</a>
         </div>
@@ -46,8 +46,8 @@
     <!--                            Image card structure                            -->
     <!--============================================================================-->
 
-    <div class= "col-7 shadow card window p-0 border border-dark">
-        <div class="d-flex justify-content-between card-header bg-secondary-subtle border-bottom border-dark">
+    <div class= "col-7 shadow card window p-0 border border-light">
+        <div class="d-flex justify-content-between card-header bg-secondary-subtle border-bottom border-light">
             <div>Image</div>
             <div class="bg-secondary-subtle">
                 Upload  
@@ -62,7 +62,7 @@
             <div>
             {% if original_image_base64 %}
                 
-                <img src="data:image/jpeg;base64,{{ original_image_base64 }}" class="img-fluid border border-dark" alt="Original Image">
+                <img src="data:image/jpeg;base64,{{ original_image_base64 }}" class="img-fluid border border-light" alt="Original Image">
             {% endif %}
             </div>
         
@@ -74,7 +74,7 @@
             {% endif %}
             </div> {% endcomment %}
         </div>
-        <div class = "card-footer d-flex justify-content-end border-top border-dark">
+        <div class = "card-footer d-flex justify-content-end border-top border-light">
             <a class="btn btn-success" href="{% url "download" %}" download="Edited_image.png">Save</a>
         </div>
 
@@ -84,31 +84,31 @@
     <!--                            Tools card structure                            -->
     <!--============================================================================-->
 
-    <div class="col shadow card p-0 window border border-dark">
-        <div class="card-header bg-secondary-subtle border-bottom border-dark">
+    <div class="col shadow card p-0 window border border-light">
+        <div class="card-header bg-secondary-subtle border-bottom border-light">
             Tools
         </div>
         <form class="d-flex flex-column" style="height: 100vh" action="{% url "apply" %}" method="get">
             <div class="m-2">
     
-                <select id="Category" class="form-select mb-2 border border-dark">
+                <select id="Category" class="form-select mb-2 border border-light">
                     <option value="0" style="color: #999">--Category--</option>
                     {% for cat_entry in category_entries %}
                     <option value="{{cat_entry.id}}">{{cat_entry.name}}</option>
                     {% endfor %}
                 </select>
                 
-                <select id="Operation" class="form-select mb-2 border border-dark" name="selected_process">
+                <select id="Operation" class="form-select mb-2 border border-light" name="selected_process">
                     <option value="0" style="color: #999">--Operation--</option>
                 </select>
             </div>
-            <div class="card-header bg-secondary-subtle border-bottom border-top border-dark">
+            <div class="card-header bg-secondary-subtle border-bottom border-top border-light">
                 Attributes
             </div>
             <div class="card-body" id= "parameters">
                 <!-- Card content goes here -->
             </div>
-            <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-dark">
+            <div class="card-footer d-flex justify-content-end bg-secondary-subtle border-top border-light">
                 <button id="applyButton" class="btn btn-success" type="submit">Apply</button>
             </div>
         </form>
@@ -167,7 +167,7 @@
                     {% csrf_token %}
                     <label>Upload a .zip file of repository consisting of all your images to be processed.</label>
                     <div>
-                        <input class="form-control border border-dark" type="file" name="sourceDirectory" accept=".zip">
+                        <input class="form-control border border-light" type="file" name="sourceDirectory" accept=".zip">
                     </div>
                 </form>
             </div>
