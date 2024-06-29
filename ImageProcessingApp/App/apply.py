@@ -31,7 +31,7 @@ def Apply(image, selected_process, request, history_entry):
     if selected_process == 'Blur':
         return ip.blur(image, param_values.get('Kernel Size'))
     elif selected_process == 'Sharpen':
-        return ip.sharpen(image, param_values.get('Kernel Size'))
+        return ip.sharpen(image)
     elif selected_process == 'Median':
         return ip.median(image, param_values.get('Kernel Size'))
     elif selected_process == 'Grayscale':
