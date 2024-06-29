@@ -36,12 +36,11 @@ setup(
     packages=find_packages(),
     install_requires=[
         'Django',
-        'asgiref>=3.8.1',
-        'numpy>=1.26.4',
-        'opencv-python>=4.9.0.80',
-        'python-dotenv>=1.0.1',
-        'sqlparse>=0.5.0',
-        'tzdata>=2024.1'
+        'numpy',
+        'opencv-python',
+        'python-dotenv',
+        'sqlparse',
+        'tzdata'
 
         # Add other dependencies here
     ],
