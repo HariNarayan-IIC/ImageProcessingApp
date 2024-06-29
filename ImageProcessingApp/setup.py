@@ -35,7 +35,7 @@ setup(
     url='https://github.com/HariNarayan-IIC/ImageProcessingApp',  # Update with your URL
     packages=find_packages(),
     install_requires=[
-        'Django>=5.0.6',
+        'Django',
         'asgiref>=3.8.1',
         'numpy>=1.26.4',
         'opencv-python>=4.9.0.80',
@@ -58,5 +58,8 @@ setup(
     python_requires='>=3.7',
     cmdclass={
         'install': PostInstallCommand,
+    },
+    package_data={
+        'your_package_name': ['db.sqlite3', '.env', 'manage.py', 'requirements.txt'],
     },
 )

@@ -11,7 +11,7 @@ import base64
 import zipfile
 import shutil
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'Uploads'
 BATCH_FOLDER = 'batchUploads'
 EXTRACTED_BATCH_FOLDER = os.path.join(BATCH_FOLDER, 'extracted')
 PROCESSED_BATCH_FOLDER = 'processedBatchUploads'
