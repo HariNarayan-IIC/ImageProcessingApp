@@ -27,7 +27,7 @@ def read(fname):
 
 setup(
     name='ImageProcessingApp_CPS',
-    version='0.1',
+    version='0.1.1',
     description='This is a django application for image processing',
     long_description='This is a Django based web-application for processing images. It comes with various features that makes image processing using OpenCV library much more convenient as we support a web UI',
     author='R Hari Narayan',
