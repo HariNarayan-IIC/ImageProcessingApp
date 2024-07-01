@@ -3,6 +3,7 @@ from setuptools.command.install import install
 import os
 import random
 import string
+import subprocess
 
 class PostInstallCommand(install):
     """Post-installation for installation mode."""
@@ -17,33 +18,49 @@ class PostInstallCommand(install):
 
         # Save the secret key to a .env file
         with open('.env', 'w') as f:
-            f.write(f'DJANGO_SECRET_KEY={secret_key}\n')
+            f.write(f'SECRET_KEY=\'{secret_key}\'\n')
 
         # Run the standard install process
         install.run(self)
+    
+    def create_database_and_run_migrations(self):
+        """Create SQLite database and run Django migrations."""
+        # Change to the directory where manage.py is located
+        original_dir = os.getcwd()
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+        try:
+            # Set environment variable for Django settings module
+            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project_name.settings')
+
+            # Run 'python manage.py migrate' command
+            subprocess.check_call(['python', 'manage.py', 'migrate'])
+
+            # Optionally create a superuser or run other management commands here
+
+        finally:
+            # Change back to the original directory
+            os.chdir(original_dir)
+
+def read_requirements():
+    with open('requirements.txt') as f:
+        return f.read().splitlines()
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name='ImageProcessingApp_CPS',
-    version='0.1.1',
+    version='0.1.6',
     description='This is a django application for image processing',
-    long_description='This is a Django based web-application for processing images. It comes with various features that makes image processing using OpenCV library much more convenient as we support a web UI',
+    long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     author='R Hari Narayan',
     author_email='',
     url='https://github.com/HariNarayan-IIC/ImageProcessingApp',  # Update with your URL
     packages=find_packages(),
-    install_requires=[
-        'Django',
-        'numpy',
-        'opencv-python',
-        'python-dotenv',
-        'sqlparse',
-        'tzdata'
-
-        # Add other dependencies here
-    ],
+    include_package_data=True,
+    install_requires=read_requirements(),
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -59,6 +76,11 @@ setup(
         'install': PostInstallCommand,
     },
     package_data={
-        'your_package_name': ['db.sqlite3', '.env', 'manage.py', 'requirements.txt'],
+        'ImageProcessingApp': ['.env', 'manage.py', 'requirements.txt','data/*.py'],
     },
+    entry_points={
+        'console_scripts': [
+            'ImageProcessingApp=ImageProcessingApp.cli:main',
+        ],
+    }
 )
