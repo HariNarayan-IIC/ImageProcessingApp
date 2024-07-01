@@ -51,7 +51,7 @@ def read(fname):
 
 setup(
     name='ImageProcessingApp_CPS',
-    version='0.1.6',
+    version='0.1.7',
     description='This is a django application for image processing',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
