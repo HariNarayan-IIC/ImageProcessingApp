@@ -13,6 +13,8 @@ def main():
 
     # Change to the directory where manage.py is located
     venv_path = os.getenv('VIRTUAL_ENV')
+    if venv_path == None:
+        venv_path = sys.executable[0:-10]
     manage_py_path = os.path.join(venv_path, 'Lib', 'site-packages', 'ImageProcessingApp')
 
     if not os.path.exists(manage_py_path):
